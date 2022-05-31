@@ -15,11 +15,12 @@ namespace Translate
     public partial class MainPage : ContentPage
     {
         Label lb;
+        Switch sw;
         BoxView box;
-        string filename;
-        string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        Button btn, btn2;
+        Button btn;
         int i;
+        Random rnd;
+        double a;
         public MainPage()
         {
             this.BackgroundColor = Color.White;
@@ -30,32 +31,61 @@ namespace Translate
                 HorizontalOptions = LayoutOptions.Start
 
             };
-
+            rnd = new Random();
             box = new BoxView()
             {
+                
                 Color = Color.Red,
                 CornerRadius = 1000,
                 WidthRequest = 300,
                 HeightRequest = 300,
                 HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center
+                VerticalOptions = LayoutOptions.Center,
+                
             };
             btn = new Button()
             {
-                Text = "Salvesta"
+                Text = "Salvesta progress"
             };
-            btn2 = new Button()
+            sw = new Switch
             {
-                Text = "Loe_failist"
+                IsToggled = true,
+                VerticalOptions = LayoutOptions.EndAndExpand,
+                HorizontalOptions = LayoutOptions.Center
             };
             TapGestureRecognizer tap = new TapGestureRecognizer();
             tap.Tapped += Tap_Tapped;
+            sw.Toggled += Sw_Toggled;
             box.GestureRecognizers.Add(tap);
             btn.Clicked += Btn_Clicked;
-            //btn2.Clicked += Btn2_Clicked;
-            StackLayout st = new StackLayout { Children = { box, btn,btn2 } };
+            StackLayout st = new StackLayout { Children = { box,lb, btn, sw } };
             Content = st;
             st.Children.Add(lb);
+        }
+
+        /*public TimeSpan Vibraion(TimeSpan duration)
+        {
+            if (sw.IsToggled)
+            {
+                duration = TimeSpan.FromSeconds(0.2);
+            }
+            else
+            {
+                duration = TimeSpan.FromSeconds(0);
+            }
+            return duration;
+        }*/
+
+        private void Sw_Toggled(object sender, ToggledEventArgs e)
+        {
+            if (sw.IsToggled)
+            {
+                a = 0.2;
+            }
+            else
+            {
+                a = 0.01;
+            }
         }
 
         protected override void OnAppearing()
@@ -72,11 +102,10 @@ namespace Translate
             Preferences.Set("Number", value);
             lb.Text = value;
             
-        }
+        }       
 
 
-
-        private void Tap_Tapped(object sender, EventArgs e)
+        public void Tap_Tapped(object sender, EventArgs e)
         {
            
             
@@ -88,9 +117,8 @@ namespace Translate
                 {
                     // Use default vibration length
                     Vibration.Vibrate();
-
+                    var duration = TimeSpan.FromSeconds(a);
                     // Or use specified time
-                    var duration = TimeSpan.FromSeconds(0.2);
                     Vibration.Vibrate(duration);
                 }
                 catch (FeatureNotSupportedException ex)
@@ -103,26 +131,5 @@ namespace Translate
                 }
             }
         }
-        /*public async void Btn_Clicked(object sender, EventArgs e)
-        {
-            filename = "Klicker.txt";
-            if (String.IsNullOrEmpty(filename)) return;
-            if (File.Exists(Path.Combine(folderPath, filename)))
-            {
-                bool isRewrited = await DisplayAlert("Kinnitus", "Fail on juba olemas, lisame andmeid sinna?", "Jah", "Ei");
-                if (isRewrited == false) return;
-            }
-            string text = i.ToString();
-            File.AppendAllLines(Path.Combine(folderPath, filename), text.Split('\n'));
-        }
-        public async void Btn2_Clicked(object sender, EventArgs e)
-        {
-            filename = "Klicker.txt";
-            if (String.IsNullOrEmpty(filename)) return;
-            if (filename != null)
-            {
-                lb.Text = File.ReadAllText(Path.Combine(folderPath, filename));
-            }
-        }*/
     }
 }
