@@ -8,21 +8,32 @@ using System.Threading.Tasks;
 using Xamarin.Essentials;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Android.Media;
+using Android.Content.Res;
 
 namespace Translate
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
+    [assembly: Dependency(typeof(AudioService))]
+
     public partial class MainPage : ContentPage
     {
         Label lb;
         Switch sw;
         BoxView box;
-        Button btn;
+        Button btn,btn2;
         int i;
+        int j;
+        ListView list;
+
         Random rnd;
+        Xamarin.Forms.Image img;
+        
         double a;
         public MainPage()
+
         {
+            
             this.BackgroundColor = Color.White;
             lb = new Label()
             {
@@ -32,6 +43,7 @@ namespace Translate
 
             };
             rnd = new Random();
+
             box = new BoxView()
             {
                 
@@ -43,9 +55,17 @@ namespace Translate
                 VerticalOptions = LayoutOptions.Center,
                 
             };
+            img = new Xamarin.Forms.Image()
+            {
+
+            };
             btn = new Button()
             {
                 Text = "Salvesta progress"
+            };
+            btn2 = new Button()
+            {
+                Text = "Pood"
             };
             sw = new Switch
             {
@@ -56,25 +76,39 @@ namespace Translate
             TapGestureRecognizer tap = new TapGestureRecognizer();
             tap.Tapped += Tap_Tapped;
             sw.Toggled += Sw_Toggled;
-            box.GestureRecognizers.Add(tap);
+            box.GestureRecognizers.Add(tap); 
+            img.GestureRecognizers.Add(tap);
+
             btn.Clicked += Btn_Clicked;
-            StackLayout st = new StackLayout { Children = { box,lb, btn, sw } };
+            btn2.Clicked += Btn2_Clicked;
+            StackLayout st = new StackLayout { Children = { box, img, lb, btn,btn2, sw } };
             Content = st;
             st.Children.Add(lb);
         }
 
-        /*public TimeSpan Vibraion(TimeSpan duration)
+        async void Btn2_Clicked(object sender, EventArgs e)
         {
-            if (sw.IsToggled)
+            string action = await DisplayActionSheet("Pood", "Ei osta", "Osta", "standardne pall", "Küpsis");
+            if (action == "Deatful")
             {
-                duration = TimeSpan.FromSeconds(0.2);
+                box.IsVisible = true;
+                img.IsVisible = false;
             }
-            else
+            else if (action == "Küpsis")
             {
-                duration = TimeSpan.FromSeconds(0);
+                j = 0;
+                img.IsVisible = true;
+                box.IsVisible = false;
+                int a = 50;
+                i = i - a;
+                img.Source = "cookie.png";
+                string value = i.ToString();
+                Preferences.Set("Number", value);
+                lb.Text = "Сохранение " + value + " нажатий успешно!";
+                
             }
-            return duration;
-        }*/
+
+        }
 
         private void Sw_Toggled(object sender, ToggledEventArgs e)
         {
@@ -92,6 +126,7 @@ namespace Translate
         {
             lb.Text = Preferences.Get("Number", "ei ole sisestatud");
             i = Convert.ToInt32(lb.Text);
+            lb.Text = "Загружнено: " + Preferences.Get("Number", "ei ole sisestatud") + " нажатий";
             base.OnAppearing();
         }
 
@@ -100,7 +135,7 @@ namespace Translate
            
             string value = i.ToString();
             Preferences.Set("Number", value);
-            lb.Text = value;
+            lb.Text = "Сохранение " + value + " нажатий успешно!";
             
         }       
 
@@ -110,6 +145,24 @@ namespace Translate
            
             
             i++;
+            j++;
+            if (img.IsVisible==true && box.IsVisible == false)
+            {
+                
+                i += 2;
+                if (j == 20)
+                {
+                    img.Source = "cookie2.png";
+
+                }
+                else if (j == 50)
+                {
+                    img.IsVisible = false;
+                    box.IsVisible = true;
+
+                }
+            }
+            
             lb.Text = "Ты нажал " + i + " раз";
             if (i >= 1)
             {
@@ -130,6 +183,7 @@ namespace Translate
                     // Other error has occurred.
                 }
             }
-        }
+            
+        }  
     }
 }
