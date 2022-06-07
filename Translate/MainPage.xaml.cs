@@ -124,7 +124,7 @@ namespace Translate
 
         async void Btn2_Clicked(object sender, EventArgs e)
         {
-            string action = await DisplayActionSheet("Pood", "Ei osta", "Osta", "standardne pall", "Küpsis");
+            string action = await DisplayActionSheet("Pood", "Ei osta", "Osta", "standardne pall", "Küpsis","Amogus");
             if (action == "Deatful")
             {
                 box.IsVisible = true;
@@ -142,6 +142,19 @@ namespace Translate
                 Preferences.Set("Number", value);
                 lb.Text = "Сохранение " + value + " нажатий успешно!";
                 
+            }
+            else if (action == "Amogus")
+            {
+                j = 0;
+                img.IsVisible = true;
+                box.IsVisible = false;
+                int a = 100;
+                i = i - a;
+                img.Source = "Amogus.png";
+                string value = i.ToString();
+                Preferences.Set("Number", value);
+                lb.Text = "Сохранение " + value + " нажатий успешно!";
+
             }
 
         }
