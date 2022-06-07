@@ -114,7 +114,7 @@ namespace Translate
         {
             if (sw.IsToggled)
             {
-                a = 0.2;
+                a = 0.1;
             }
             else
             {
@@ -150,12 +150,12 @@ namespace Translate
             {
                 
                 i += 2;
-                if (j == 20)
+                if (j == 5)
                 {
                     img.Source = "cookie2.png";
 
                 }
-                else if (j == 50)
+                else if (j == 10)
                 {
                     img.IsVisible = false;
                     box.IsVisible = true;

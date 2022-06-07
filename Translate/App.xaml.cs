@@ -10,7 +10,7 @@ namespace Translate
         {
             InitializeComponent();
 
-            MainPage = new MainPage();
+            MainPage = new NavigationPage(new Starts());
         }
 
         protected override void OnStart()
