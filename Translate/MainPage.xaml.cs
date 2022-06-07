@@ -10,18 +10,19 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using Android.Media;
 using Android.Content.Res;
+using Android.OS;
+using MediaManager;
 
 namespace Translate
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    [assembly: Dependency(typeof(AudioService))]
 
     public partial class MainPage : ContentPage
     {
         Label lb;
         Switch sw;
         BoxView box;
-        Button btn,btn2;
+        Button btn,btn2,btn3,btn4;
         int i;
         int j;
         ListView list;
@@ -30,9 +31,13 @@ namespace Translate
         Xamarin.Forms.Image img;
         
         double a;
+
+        public IList<string> Mp3List => new[]
+        {"https://ia800605.us.archive.org/32/items/Mp3Playlist_555/AaronNeville-CrazyLove.mp3"};
         public MainPage()
 
         {
+            
             
             this.BackgroundColor = Color.White;
             lb = new Label()
@@ -61,12 +66,32 @@ namespace Translate
             };
             btn = new Button()
             {
-                Text = "Salvesta progress"
+                Text = "Salvesta progress",
+                BackgroundColor = Color.LightGreen,
+                HorizontalOptions = LayoutOptions.End
             };
             btn2 = new Button()
             {
-                Text = "Pood"
+                Text = "Pood",
+                BackgroundColor = Color.LightGreen,
+
+                HorizontalOptions = LayoutOptions.End
             };
+            btn3 = new Button()
+            {
+               Text = "Muusika",
+                BackgroundColor = Color.LightGreen,
+
+                HorizontalOptions = LayoutOptions.End
+            };
+            btn4 = new Button()
+            {
+                Text = "Muusika kinni",
+                BackgroundColor = Color.LightGreen,
+
+                HorizontalOptions = LayoutOptions.End
+            };
+  
             sw = new Switch
             {
                 IsToggled = true,
@@ -78,12 +103,23 @@ namespace Translate
             sw.Toggled += Sw_Toggled;
             box.GestureRecognizers.Add(tap); 
             img.GestureRecognizers.Add(tap);
-
+            btn4.Clicked += Btn4_Clicked;
+            btn3.Clicked += Btn3_Clicked;
             btn.Clicked += Btn_Clicked;
             btn2.Clicked += Btn2_Clicked;
-            StackLayout st = new StackLayout { Children = { box, img, lb, btn,btn2, sw } };
+            StackLayout st = new StackLayout { Children = {btn3,btn4, box, img, lb, btn,btn2, sw } };
             Content = st;
             st.Children.Add(lb);
+        }
+
+        private async void Btn4_Clicked(object sender, EventArgs e)
+        {
+            await CrossMediaManager.Current.Stop();
+        }
+
+        private async void Btn3_Clicked(object sender, EventArgs e)
+        {
+            await CrossMediaManager.Current.Play(Mp3List);
         }
 
         async void Btn2_Clicked(object sender, EventArgs e)
